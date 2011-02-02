@@ -1486,11 +1486,6 @@ class StoreTest(object):
         self.assertEquals(sorted(result),
                           [u"Title 10", u"Title 20", u"Title 30",])
 
-    def test_find_with_expr_union_mismatch(self):
-        result1 = self.store.find(Foo.title)
-        result2 = self.store.find(Bar.foo_id)
-        self.assertRaises(FeatureError, result1.union, result2)
-
     def test_find_tuple_with_expr_union(self):
         result1 = self.store.find(
             (Foo, Bar.title), Bar.foo_id == Foo.id, Bar.title == u"Title 100")
@@ -5549,11 +5544,6 @@ class StoreTest(object):
                           (30, "Title 10"),
                          ])
 
-    def test_result_union_incompatible(self):
-        result1 = self.store.find(Foo, id=10)
-        result2 = self.store.find(Bar, id=100)
-        self.assertRaises(FeatureError, result1.union, result2)
-
     def test_result_union_unsupported_methods(self):
         result1 = self.store.find(Foo, id=30)
         result2 = self.store.find(Foo, id=10)
@@ -5602,14 +5592,6 @@ class StoreTest(object):
         self.assertEquals([(foo.id, foo.title) for foo in result3], [
                           (30, "Title 10"),
                          ])
-
-    def test_result_difference_incompatible(self):
-        if self.__class__.__name__.startswith("MySQL"):
-            return
-
-        result1 = self.store.find(Foo, id=10)
-        result2 = self.store.find(Bar, id=100)
-        self.assertRaises(FeatureError, result1.difference, result2)
 
     def test_result_difference_count(self):
         if self.__class__.__name__.startswith("MySQL"):
@@ -5660,14 +5642,6 @@ class StoreTest(object):
         result3 = result1.intersection(result2)
 
         self.assertEquals(len(list(result3)), 0)
-
-    def test_result_intersection_incompatible(self):
-        if self.__class__.__name__.startswith("MySQL"):
-            return
-
-        result1 = self.store.find(Foo, id=10)
-        result2 = self.store.find(Bar, id=100)
-        self.assertRaises(FeatureError, result1.intersection, result2)
 
     def test_result_intersection_count(self):
         if self.__class__.__name__.startswith("MySQL"):

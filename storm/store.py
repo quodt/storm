@@ -1696,8 +1696,6 @@ class FindSpec(object):
             self._cls_spec_info, find_spec._cls_spec_info):
             if is_expr1 != is_expr2:
                 return False
-            if info1 is not info2:
-                return False
         return True
 
     def load_objects(self, store, result, values):
