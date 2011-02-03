@@ -32,7 +32,7 @@ from storm.properties import Int, Float, RawStr, Unicode, Property, Pickle
 from storm.properties import PropertyPublisherMeta, Decimal
 from storm.variables import PickleVariable
 from storm.expr import (
-    Asc, Desc, Select, LeftJoin, SQL, Count, Sum, Avg, And, Or, Eq, Lower)
+    Asc, Desc, Select, LeftJoin, SQL, Count, Sum, Avg, And, Or, Eq, Lower, Alias)
 from storm.variables import Variable, UnicodeVariable, IntVariable
 from storm.info import get_obj_info, ClassAlias
 from storm.exceptions import (
@@ -1485,6 +1485,14 @@ class StoreTest(object):
         result = result1.union(result2)
         self.assertEquals(sorted(result),
                           [u"Title 10", u"Title 20", u"Title 30",])
+
+    def test_find_alias_with_expr_union(self):
+        result1 = self.store.find(Alias(Foo.title, 'title'),
+                                  Foo.title == u"Title 30")
+        result2 = self.store.find(Alias(Bar.title, 'title'),
+                                  Bar.title == u"Title 100")
+        result = result1.union(result2)
+        self.assertEquals(sorted(result), [u'Title 100', u'Title 30'])
 
     def test_find_tuple_with_expr_union(self):
         result1 = self.store.find(
